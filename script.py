@@ -6,7 +6,7 @@ import os
 
 # account credentials
 username = "test@gmail.com"
-password = "mypassword"
+password = "tets@123"
 
 # create an IMAP4 class with SSL 
 imap = imaplib.IMAP4_SSL("imap.gmail.com")
@@ -15,7 +15,10 @@ imap = imaplib.IMAP4_SSL("imap.gmail.com")
 imap.login(username, password)
 
 # email address to get emails from
-emails_from = "target@gmail.com"
+emails_from = "test"
+
+char_before_target_text = "EcoCash Reference:"
+char_after_target_text = "\n"
 
 status, messages = imap.select("INBOX")
 
@@ -44,7 +47,6 @@ for i in range(messages, messages-number, -1):
             start = From.find("<") + len("<")
             end = From.find(">")
             search_email = From[start:end]
-            print(search_email)
             if search_email == emails_from:
                 # if the email message is multipart
                 if msg.is_multipart():
@@ -56,8 +58,11 @@ for i in range(messages, messages-number, -1):
                     body = msg.get_payload(decode=True).decode()
                     if content_type == "text/plain":
                         # print only text email parts
-                        print(body)
-
+                        # print(body)
+                        start = body.find(char_before_target_text) + len(char_before_target_text)
+                        end = body.find(char_after_target_text, start)
+                        targeted_text = body[start:end]
+                        print(targeted_text)
                 print("="*100)
             else:
                 pass
